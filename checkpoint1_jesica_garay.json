@@ -1,0 +1,226 @@
+{
+  "name": "UNIDAD 1",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "26769505-afa5-4412-a882-46c8cd431a36",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "0bdeda97-80f6-4f3f-925b-4a354ffcffa8",
+      "credentials": {
+        "telegramApi": {
+          "id": "HS3ZzxseT5rFp0u5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You [ROL Y ÁMBITO]\nSos un Agente de Triaje de Soporte de RRHH para una empresa . Tu único ámbito es interpretar mensajes desestructurados de usuarios, identificar el problema principal, clasificar la prioridad y registrar un ticket limpio para que el equipo de Analistas puedan actuar.\n\nNO tenés autorización para: prometer tiempos de resolución, cerrar tickets, otorgar compensaciones, modificar datos/licencias, borrar registros, ejecutar acciones destructivas, brindar asesoramiento legal o comprometer decisiones .\n\n[OBJETIVO OPERATIVO]\nConvertir cada consulta entrante en un registro estructurado con: nombre del usuario, contacto, area, categoría del problema, prioridad, resumen del caso y próxima acción recomendada.\n\n[REGLAS DE USO DE HERRAMIENTAS]\n- Usá la herramienta \"Seguimiento consultas RRHH\" SOLO cuando tengas datos mínimos suficientes:nombre,apellido, area,consulta.\n- Si falta un dato clave, hacé una única pregunta clara antes de registrar.\n- No inventes información. Si un dato no fue provisto, dejalo vacío o marcá \"No informado\".\n- Clasificá la prioridad como Alta, Media o Baja. Alta aplica si hay renuncia, ausencia, accidente,diferencia en cobros percibidos.\n- Si el mensaje mezcla varios problemas, priorizá el problema de mayor impacto y dejá el resto en notas.\n\n[PROTOCOLO DE ESCALAMIENTO / GUARDRAILS]\n- Si el usuario reporta ausencia, enfermedad,accidente,renuncia, marcá prioridad Alta y recomendá revisión humana inmediata.\n- Si el usuario pide una acción destructiva o sensible, detené el ciclo y respondé: \"El caso requiere revisión humana antes de ejecutar acciones sensibles.\"\n- No envíes correos ni mensajes externos al cliente final. Solo registrá el ticket y generá un resumen operativo.\n\n[ESTILO]\n- Escribí en español , claro y profesional.\n- No uses lenguaje inclusivo con terminaciones en -e, -x o @.\n- Sé breve, específico y orientado a la operaciónre a helpful assistant"
+        }
+      },
+      "id": "d9af94fb-2334-4254-aaf2-a309f6ac1c91",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        384,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "id": "22199cbe-8ef3-4d4b-a6dc-703141f5ac26",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        256,
+        208
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "kFJnBx7iXlGQ7q62",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Esta herramienta registra tickets de consultas recibidas en RRHH",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1j3nf_wwvKHdvfphpd-tgreeVpGBixYrh_DIDTP5r7ag",
+          "mode": "list",
+          "cachedResultName": "Seguimiento consultas RRHH",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j3nf_wwvKHdvfphpd-tgreeVpGBixYrh_DIDTP5r7ag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1j3nf_wwvKHdvfphpd-tgreeVpGBixYrh_DIDTP5r7ag/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "consulta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('consulta', ``, 'string') }}",
+            "contacto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('contacto', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "consulta",
+              "displayName": "consulta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "contacto",
+              "displayName": "contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1f3bb7d6-d564-46ab-a1f4-c0ff2d621827",
+      "name": "Registro de consultas",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        544,
+        224
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "G1mRnAGhJKR5xRtE",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "=Análisis de repuesta -Agente de RRHH :\n{{ $json.output }}",
+        "additionalFields": {}
+      },
+      "id": "0fd772b6-3a15-43a7-8957-ae2af52215dd",
+      "name": "Telegram Respuesta",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        752,
+        16
+      ],
+      "webhookId": "6badf50a-c32d-4d40-8e72-c3e1dedebf1b",
+      "credentials": {
+        "telegramApi": {
+          "id": "HS3ZzxseT5rFp0u5",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registro de consultas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a82a6f4d-561d-4ade-bc2c-4e169575be4b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b93a94061b5c096c8011dadc8d90e782d899ad4fae0e074c87d632d36e948b78"
+  },
+  "nodeGroups": [],
+  "id": "Ear3OijBNH59UgpK",
+  "tags": []
+}
